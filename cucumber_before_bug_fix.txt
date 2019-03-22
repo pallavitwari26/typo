@@ -1,0 +1,81 @@
+Using the default profile...
+Feature: Create Blog
+  As an author
+  In order to gift my thoughts to the world
+  I want to create a blog
+
+  Scenario: Create blog page shown      # features/create_blog.feature:6
+    Given I am on the home page         # features/step_definitions/web_steps.rb:68
+    Then I should see "Welcome"         # features/step_definitions/web_steps.rb:129
+    And I should see "My Shiny Weblog!" # features/step_definitions/web_steps.rb:129
+
+  Scenario: Create blog page not shown when blog created # features/create_blog.feature:11
+    Given the blog is set up                             # features/step_definitions/web_steps.rb:34
+    When I am on the home page                           # features/step_definitions/web_steps.rb:68
+    Then I should not see "My Shiny Weblog!"             # features/step_definitions/web_steps.rb:147
+    And I should see "Teh Blag"                          # features/step_definitions/web_steps.rb:129
+
+Feature: Create categories
+  As an blog administrator
+  In order to share my thoughts to the world
+  I want to be able to add categories to my blog
+
+  Background:                            # features/create_categories.feature:6
+    Given the blog is set up             # features/step_definitions/web_steps.rb:34
+    And I am logged into the admin panel # features/step_definitions/web_steps.rb:46
+
+  Scenario: Successfully Create categories             # features/create_categories.feature:10
+    Given I am on the new categories page              # features/step_definitions/web_steps.rb:68
+      Couldn't find Category without an ID (ActiveRecord::RecordNotFound)
+      ./app/controllers/admin/categories_controller.rb:28:in `new_or_edit'
+      ./app/controllers/admin/categories_controller.rb:9:in `block (2 levels) in new'
+      ./app/controllers/admin/categories_controller.rb:8:in `new'
+      <internal:prelude>:10:in `synchronize'
+      ./features/step_definitions/web_steps.rb:69:in `/^(?:|I )am on (.+)$/'
+      features/create_categories.feature:11:in `Given I am on the new categories page'
+    When I fill in "category_name" with "books"        # features/step_definitions/web_steps.rb:84
+    And I fill in "category_keywords" with "romantic"  # features/step_definitions/web_steps.rb:84
+    And I fill in "category_permalink" with "yes"      # features/step_definitions/web_steps.rb:84
+    And I fill in "category_description" with "desc"   # features/step_definitions/web_steps.rb:84
+    And I press "Save"                                 # features/step_definitions/web_steps.rb:76
+    Then I should see "books"                          # features/step_definitions/web_steps.rb:129
+    Then I should see "romantic"                       # features/step_definitions/web_steps.rb:129
+    Then I should see "yes"                            # features/step_definitions/web_steps.rb:129
+    Then I should see "desc"                           # features/step_definitions/web_steps.rb:129
+    Then I follow "books"                              # features/step_definitions/web_steps.rb:80
+    When I fill in "category_name" with "books1"       # features/step_definitions/web_steps.rb:84
+    And I fill in "category_keywords" with "romantic1" # features/step_definitions/web_steps.rb:84
+    And I fill in "category_permalink" with "yes1"     # features/step_definitions/web_steps.rb:84
+    And I fill in "category_description" with "desc1"  # features/step_definitions/web_steps.rb:84
+    And I press "Save"                                 # features/step_definitions/web_steps.rb:76
+    Then I should see "books1"                         # features/step_definitions/web_steps.rb:129
+    Then I should see "romantic1"                      # features/step_definitions/web_steps.rb:129
+    Then I should see "yes1"                           # features/step_definitions/web_steps.rb:129
+    Then I should see "desc1"                          # features/step_definitions/web_steps.rb:129
+
+Feature: Write Articles
+  As a blog administrator
+  In order to share my thoughts with the world
+  I want to be able to add articles to my blog
+
+  Background:                            # features/write_article.feature:6
+    Given the blog is set up             # features/step_definitions/web_steps.rb:34
+    And I am logged into the admin panel # features/step_definitions/web_steps.rb:46
+
+  Scenario: Successfully write articles                                  # features/write_article.feature:10
+    Given I am on the new article page                                   # features/step_definitions/web_steps.rb:68
+    When I fill in "article_title" with "Foobar"                         # features/step_definitions/web_steps.rb:84
+    And I fill in "article__body_and_extended_editor" with "Lorem Ipsum" # features/step_definitions/web_steps.rb:84
+    And I press "Publish"                                                # features/step_definitions/web_steps.rb:76
+    Then I should be on the admin content page                           # features/step_definitions/web_steps.rb:254
+    When I go to the home page                                           # features/step_definitions/web_steps.rb:72
+    Then I should see "Foobar"                                           # features/step_definitions/web_steps.rb:129
+    When I follow "Foobar"                                               # features/step_definitions/web_steps.rb:80
+    Then I should see "Lorem Ipsum"                                      # features/step_definitions/web_steps.rb:129
+
+Failing Scenarios:
+cucumber features/create_categories.feature:10 # Scenario: Successfully Create categories
+
+4 scenarios (1 failed, 3 passed)
+40 steps (1 failed, 19 skipped, 20 passed)
+0m1.944s
